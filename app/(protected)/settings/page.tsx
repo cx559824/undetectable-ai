@@ -5,17 +5,8 @@ export default async function SettingsPage() {
   const session = await auth();
 
   return (
-    <div>
-      {JSON.stringify(session)}
-      <form
-        action={async () => {
-          "use server";
-
-          await signOut();
-        }}
-      >
-        <Button>Sign Out</Button>
-      </form>
+    <div className='flex grow flex-col items-center justify-center text-9xl font-bold'>
+      Settings Page
     </div>
   );
 }

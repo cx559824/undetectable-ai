@@ -11,7 +11,6 @@ import { getUserByEmail } from "./data/user";
 
 export default {
   providers: [
-    // Resend({}),
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -20,6 +19,12 @@ export default {
       clientId: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
     }),
+    // TODO: Add Magic link func since there is an issue with email providers
+    // https://github.com/nextauthjs/next-auth/issues/10632
+    // Resend({
+    //   apiKey: process.env.AUTH_RESEND_KEY,
+    //   from: "ditterraquion23@gmail.com",
+    // }),
     Credentials({
       async authorize(credentials) {
         const validatedFields = LoginSchema.safeParse(credentials);
