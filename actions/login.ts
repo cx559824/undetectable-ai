@@ -4,7 +4,7 @@ import * as z from "zod";
 import { AuthError, CredentialsSignin } from "next-auth";
 
 import { signIn } from "@/auth";
-import { LoginSchema } from "@/schemas";
+import { LoginSchema } from "@/zod-schemas";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 // class CustomError extends CredentialsSignin {

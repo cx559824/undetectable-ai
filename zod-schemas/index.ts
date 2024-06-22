@@ -18,3 +18,18 @@ export const RegisterSchema = z.object({
   }),
   name: z.string().min(1, { message: "Name is required" }),
 });
+
+export const HumanizeTextFormSchema = z.object({
+  humanizeText: z.string().min(50, {
+    message: "Please enter at least 50 characters",
+  }),
+});
+
+export const TestLoginFormSchema = z.object({
+  username: z.string().min(1, {
+    message: "Username is required",
+  }),
+  password: z.string().min(1, {
+    message: "Password is required",
+  }),
+});
