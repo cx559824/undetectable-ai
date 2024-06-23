@@ -74,6 +74,8 @@ model HumanizedText {
   predecessor HumanizedText? @relation("DocumentHistory")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("humanized_text")
 }
 
 model VerificationToken {
@@ -83,4 +85,5 @@ model VerificationToken {
   expires DateTime
 
   @@unique([email, token])
+  @@map("verification_tokens")
 }
