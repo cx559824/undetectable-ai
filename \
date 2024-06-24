@@ -47,6 +47,7 @@ export default function Dashboard() {
           className='space-y-3'
           onSubmit={form.handleSubmit(async (data) => {
             execute(data);
+            console.log(data);
           })}
         >
           <FormField
@@ -58,10 +59,13 @@ export default function Dashboard() {
                 <FormControl>
                   <Textarea
                     placeholder='Enter text here with at least 50 characters'
-                    className='h-40'
+                    className='h-20'
                     {...field}
                   />
                 </FormControl>
+                {/* <FormDescription> */}
+                {/*   This is your public display name. */}
+                {/* </FormDescription> */}
                 <FormMessage />
               </FormItem>
             )}

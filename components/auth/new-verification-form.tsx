@@ -9,10 +9,12 @@ import { newVerification } from "@/actions/new-verification";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 
-export default function NewVerificationForm() {
+export const NewVerificationForm = () => {
   const searchParams = useSearchParams();
+
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
+
   const token = searchParams.get("token");
 
   const onSubmit = useCallback(() => {
@@ -50,4 +52,4 @@ export default function NewVerificationForm() {
       </div>
     </CardWrapper>
   );
-}
+};

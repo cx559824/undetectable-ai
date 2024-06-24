@@ -10,8 +10,8 @@ export default async function Navbar() {
       <h1 className='text-3xl font-bold text-orange-600'>Undetectable AI</h1>
       <div className='flex gap-3'>
         <Image
-          className='rounded-full'
-          src={session?.user.image || ""}
+          className='cursor-pointer rounded-full duration-300 hover:scale-125'
+          src={session?.user.image || "/no-avatar.png"}
           alt={session?.user.name || ""}
           width={40}
           height={40}
@@ -22,7 +22,7 @@ export default async function Navbar() {
             await signOut();
           }}
         >
-          <Button className='rounded-full' variant='outline'>
+          <Button className='rounded-md' variant='outline'>
             Sign Out
           </Button>
         </form>
