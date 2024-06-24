@@ -25,7 +25,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 
 export default function Dashboard() {
-  const { execute, result, status } = useAction(humanizeTextForm, {});
+  const { execute, result, status, isExecuting } = useAction(
+    humanizeTextForm,
+    {}
+  );
 
   const form = useForm<z.infer<typeof HumanizeTextFormSchema>>({
     resolver: zodResolver(HumanizeTextFormSchema),
@@ -67,7 +70,9 @@ export default function Dashboard() {
               </FormItem>
             )}
           />
-          <Button type='submit'>Humanize Text</Button>
+          <Button type='submit' disabled={isExecuting}>
+            Humanize Text
+          </Button>
         </form>
       </Form>
     </div>

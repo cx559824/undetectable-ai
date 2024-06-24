@@ -1,7 +1,7 @@
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
-import Resend from "next-auth/providers/resend";
+// import Resend from "next-auth/providers/resend";
 import bcrypt from "bcryptjs";
 
 import { LoginSchema } from "./zod-schemas";
