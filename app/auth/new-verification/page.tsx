@@ -1,5 +1,13 @@
-import NewVerificationForm from "@/components/auth/new-verification-form";
+import { NewVerificationForm } from "@/components/auth/new-verification-form";
+import { Suspense } from "react";
+import { BeatLoader } from "react-spinners";
 
-export default function NewVerificationPage() {
-  return <NewVerificationForm />;
-}
+const NewVerificationPage = () => {
+  return (
+    <Suspense fallback={<BeatLoader />}>
+      <NewVerificationForm />
+    </Suspense>
+  );
+};
+
+export default NewVerificationPage;
