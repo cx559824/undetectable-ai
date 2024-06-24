@@ -20,6 +20,7 @@ export const authRoutes: string[] = [
   "/auth/register",
   "/auth/error",
   "/auth/reset",
+  "/auth/new-password",
 ];
 
 /**
