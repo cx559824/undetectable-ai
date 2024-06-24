@@ -1,7 +1,21 @@
-export default async function SettingsPage() {
+"use client";
+
+import { logout } from "@/actions/logout";
+import { useCurrentUser } from "@/hooks/use-current-user";
+
+const SettingsPage = () => {
+  const user = useCurrentUser();
+
+  const onClick = () => {
+    logout();
+  };
+
   return (
-    <div className='flex grow flex-col items-center justify-center text-9xl font-bold'>
-      Settings Page
+    <div>
+      {JSON.stringify(user)}
+      <button onClick={onClick}>Sign Out</button>
     </div>
   );
-}
+};
+
+export default SettingsPage;
