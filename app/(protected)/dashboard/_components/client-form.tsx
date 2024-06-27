@@ -189,18 +189,13 @@ export default function ClientForm() {
           {isExecuting ? (
             <Loader2 className='h-4 w-4 animate-spin' />
           ) : (
-            <>
-              <Button
-                className='flex-end flex'
-                type='submit'
-                disabled={isExecuting}
-              >
+            <div className='flex gap-x-2'>
+              {/* <Button className='flex-end' type='submit'> */}
+              <Button className='flex-end'>Check for AI</Button>
+              <Button className='flex-end' type='submit' disabled={isExecuting}>
                 Humanize Text
               </Button>
-              <Button className='flex-end flex' type='submit'>
-                Check for AI
-              </Button>
-            </>
+            </div>
           )}
         </div>
         <Separator />
