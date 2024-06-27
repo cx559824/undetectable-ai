@@ -9,6 +9,7 @@ export default function DocumentList() {
     queryKey: ["documents"],
     queryFn: getDocuments,
   });
+  console.log(data);
 
   if (error) <h2>{error.message}</h2>;
   if (data)
@@ -24,7 +25,7 @@ export default function DocumentList() {
                 className='mx-4 cursor-pointer items-center truncate rounded-md border border-solid border-gray-300 px-3 py-2 text-sm shadow-lg duration-300 hover:scale-105'
                 key={item.id}
               >
-                <p> {item.output}</p>
+                <p>{item.output}</p>
                 <span>{item.strength}</span>
               </div>
             </>
