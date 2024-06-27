@@ -13,7 +13,6 @@ export default async function Dashboard() {
     queryKey: ["documents"],
     queryFn: getDocuments,
   });
-  // const documents = await getDocuments();
 
   return (
     <>
