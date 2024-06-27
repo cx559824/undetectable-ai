@@ -45,7 +45,7 @@ export const humanizeTextForm = actionClient
 
       if (result.status === "queued" && result.id) {
         const id = result.id;
-        await new Promise((resolve) => setTimeout(resolve, 5000));
+        await new Promise((resolve) => setTimeout(resolve, 3000));
         // Retry fetching the result recursively
         const resendData = await fetch(`https://api.undetectable.ai/document`, {
           method: "POST",
