@@ -1,9 +1,8 @@
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
-// import Resend from "next-auth/providers/resend";
+import Resend from "next-auth/providers/resend";
 import bcrypt from "bcryptjs";
-
 import { LoginSchema } from "./zod-schemas";
 
 import type { NextAuthConfig } from "next-auth";
@@ -19,12 +18,6 @@ export default {
       clientId: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
     }),
-    // TODO: Add Magic link func since there is an issue with email providers
-    // https://github.com/nextauthjs/next-auth/issues/10632
-    // Resend({
-    //   apiKey: process.env.AUTH_RESEND_KEY,
-    //   from: "ditterraquion23@gmail.com",
-    // }),
     Credentials({
       async authorize(credentials) {
         const validatedFields = LoginSchema.safeParse(credentials);
@@ -43,5 +36,6 @@ export default {
         return null;
       },
     }),
+    // Resend,
   ],
 } satisfies NextAuthConfig;

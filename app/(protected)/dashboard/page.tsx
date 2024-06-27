@@ -1,73 +1,30 @@
-"use client";
-
-import { Button } from "@/components/ui/button";
+import { getDocuments } from "@/data/get-documents";
+import ClientForm from "./_components/client-form";
+import DocumentList from "./_components/document-list";
 import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  Form,
-} from "@/components/ui/form";
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 
-import { useRef } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-// import { useStateAction } from "next-safe-action/stateful-hooks";
-import { useAction } from "next-safe-action/hooks";
-
-import { Input } from "@/components/ui/input";
-import { HumanizeTextFormSchema } from "@/zod-schemas";
-import { humanizeTextForm } from "@/actions/humanize-text";
-import { Textarea } from "@/components/ui/textarea";
-import { toast } from "@/components/ui/use-toast";
-
-export default function Dashboard() {
-  const { execute, result, status, isExecuting } = useAction(humanizeTextForm);
-
-  const form = useForm<z.infer<typeof HumanizeTextFormSchema>>({
-    resolver: zodResolver(HumanizeTextFormSchema),
-    defaultValues: {
-      humanizeText: result.data?.humanizeText || "",
-    },
+export default async function Dashboard() {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery({
+    queryKey: ["documents"],
+    queryFn: getDocuments,
   });
-
-  const formRef = useRef<HTMLFormElement>(null);
+  // const documents = await getDocuments();
 
   return (
-    <div className='px-56 py-4'>
-      <Form {...form}>
-        <form
-          ref={formRef}
-          className='space-y-3'
-          onSubmit={form.handleSubmit(async (data) => {
-            execute(data);
-          })}
-        >
-          <FormField
-            control={form.control}
-            name='humanizeText'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Please Enter Text</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder='Enter text here with at least 50 characters'
-                    className='h-40'
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button type='submit' disabled={isExecuting}>
-            Humanize Text
-          </Button>
-        </form>
-      </Form>
-    </div>
+    <>
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <div className='grid h-screen w-full grid-cols-2 gap-5 px-4 py-4'>
+          <div>
+            <ClientForm />
+          </div>
+          <DocumentList />
+        </div>
+      </HydrationBoundary>
+    </>
   );
 }

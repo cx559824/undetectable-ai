@@ -4,20 +4,21 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
-// import { logout } from "@/actions/logout"; // Serverside logout
-import { signOut } from "next-auth/react"; // Clientside signOut
+import { logout } from "@/actions/logout"; // Serverside logout
+// import { signOut } from "next-auth/react"; // Clientside signOut
 import { Button } from "@/components/ui/button";
 import { useCurrentUser } from "@/hooks/use-current-user";
+import { ModeToggle } from "@/components/theme-toggle";
 
 export const Navbar = () => {
   const user = useCurrentUser();
   const pathname = usePathname();
 
   // Example server action for logging out
-  // const onClick = () => {
-  //   logout();
-  // };
-  //
+  const onClick = () => {
+    logout();
+  };
+
   return (
     <nav className='mx-auto flex h-20 w-full items-center justify-between bg-blue-950 px-5'>
       <h1 className='text-3xl font-bold text-orange-600'>Undetectable AI</h1>
@@ -41,22 +42,22 @@ export const Navbar = () => {
           width={40}
           height={40}
         />
-        <Button
-          className='cursor-pointer duration-300 hover:scale-110'
-          onClick={() => signOut()}
-        >
-          Sign Out
-        </Button>
-        {/* form to signOut serverside */}
-        {/* <form */}
-        {/*   action={async () => { */}
-        {/*     await signOut(); */}
-        {/*   }} */}
+        {/* <Button */}
+        {/*   className='cursor-pointer duration-300 hover:scale-110' */}
+        {/*   onClick={() => signOut()} */}
         {/* > */}
-        {/*   <Button className='rounded-md' variant='outline'> */}
-        {/*     Sign Out */}
-        {/*   </Button> */}
-        {/* </form> */}
+        {/*   Sign Out */}
+        {/* </Button> */}
+        {/* form to signOut serverside */}
+        <form
+          action={async () => {
+            await logout();
+          }}
+        >
+          <Button className='rounded-md' variant='outline'>
+            Sign Out
+          </Button>
+        </form>
       </div>
     </nav>
   );
