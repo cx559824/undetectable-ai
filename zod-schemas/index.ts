@@ -30,10 +30,36 @@ export const RegisterSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
 });
 
+export const READABILITY_VALUES = [
+  "High School",
+  "University",
+  "Doctorate",
+  "Journalist",
+  "Marketing",
+] as const;
+
+export const PURPOSE_VALUES = [
+  "General Writing",
+  "Essay",
+  "Article",
+  "Marketing Material",
+  "Story",
+  "Cover Letter",
+  "Report",
+  "Business Material",
+  "Legal Material",
+] as const;
+
+export const STRENGTH_VALUES = ["Quality", "Balanced", "More Human"] as const;
+
 export const HumanizeTextFormSchema = z.object({
-  humanizeText: z.string().min(50, {
+  content: z.string().min(50, {
     message: "Please enter at least 50 characters",
   }),
+  readability: z.enum(READABILITY_VALUES),
+  purpose: z.enum(PURPOSE_VALUES),
+  strength: z.enum(STRENGTH_VALUES),
+  successorId: z.string().optional(),
 });
 
 export const TestLoginFormSchema = z.object({
@@ -43,4 +69,16 @@ export const TestLoginFormSchema = z.object({
   password: z.string().min(1, {
     message: "Password is required",
   }),
+});
+
+export const FetchDocumentSchema = z.object({
+  id: z.string(),
+});
+
+export const ListDocumentSchema = z.object({
+  page: z.number(),
+});
+
+export const DetectSingleSchema = z.object({
+  content: z.string(),
 });
