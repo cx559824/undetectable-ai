@@ -60,8 +60,6 @@ export const settings = async (values: z.infer<typeof SettingsSchema>) => {
     values.newPassword = undefined;
   }
 
-  revalidatePath("/demo");
-
   await db.user.update({
     where: {
       id: dbUser.id,
@@ -70,6 +68,8 @@ export const settings = async (values: z.infer<typeof SettingsSchema>) => {
       ...values,
     },
   });
+
+  revalidatePath("/demo");
 
   return { success: "Settings Updated!" };
 };
