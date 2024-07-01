@@ -4,9 +4,9 @@ import { db } from "@/lib/db";
 import { getUserById } from "@/data/user";
 import { currentUser } from "@/lib/auth";
 import { actionClient } from "@/lib/safe-action";
-import { HumanizeTextFormSchema, TestLoginFormSchema } from "@/zod-schemas";
-import { getHumanizedText } from "./get-humanized-text";
+import { HumanizeTextFormSchema } from "@/zod-schemas";
 import { revalidatePath } from "next/cache";
+import { Prisma } from "@prisma/client";
 
 export const humanizeTextForm = actionClient
   .schema(HumanizeTextFormSchema)
@@ -17,7 +17,7 @@ export const humanizeTextForm = actionClient
         purpose,
         strength,
         readability,
-        successorId = null,
+        predecessorId = null,
       },
     }) => {
       const response = await fetch(`https://api.undetectable.ai/submit`, {
@@ -34,6 +34,7 @@ export const humanizeTextForm = actionClient
         }),
         redirect: "follow",
       });
+
       const result = await response.json();
       const user = await currentUser();
 
@@ -57,30 +58,53 @@ export const humanizeTextForm = actionClient
             id,
           }),
         });
+
         const data = await resendData.json();
+
+        const scoreData = await fetch(
+          `https://aicheck.undetectable.ai/detectIndividual`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              accept: "application/json",
+            },
+            body: JSON.stringify({
+              text: data.output,
+              key: process.env.UNDETECTABLE_AI_API_KEY!,
+            }),
+          }
+        );
+
+        const score = await scoreData.json();
+
+        console.log(score);
+
         try {
+          const savedData = await db.humanizedText.create({
+            data: {
+              userId: dbUser.id,
+              id: data.id,
+              input: content,
+              score: score,
+              purpose: purpose,
+              output: data.output,
+              strength: strength,
+              readability: readability,
+              cost: data.cost,
+              status: data.status,
+              created: data.created,
+              predecessorId: predecessorId,
+            },
+          });
+
+          console.log(savedData);
+
+          revalidatePath("/dashboard");
+          return { savedData };
         } catch (error) {
           console.log(error);
         }
-        const savedData = await db.humanizedText.create({
-          data: {
-            userId: dbUser.id,
-            id: data.id,
-            input: content,
-            purpose: purpose,
-            output: data.output,
-            strength: data.strength,
-            readability: readability,
-            cost: data.cost,
-            status: data.status,
-            created: data.created,
-            successorId: successorId,
-          },
-        });
-        console.log(savedData);
-        revalidatePath("/dashboard");
-
-        return { savedData };
       }
     }
   );

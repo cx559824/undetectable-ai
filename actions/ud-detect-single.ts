@@ -3,7 +3,7 @@
 import { actionClient } from "@/lib/safe-action";
 import { DetectSingleSchema } from "@/zod-schemas";
 
-export const getHumanizedText = actionClient
+export const detectSingle = actionClient
   .schema(DetectSingleSchema)
   .action(async ({ parsedInput: { content } }) => {
     const response = await fetch(`https://api.undetectable.ai/detect`, {
