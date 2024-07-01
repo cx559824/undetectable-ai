@@ -61,7 +61,7 @@ export const HumanizeTextFormSchema = z.object({
   readability: z.enum(READABILITY_VALUES),
   purpose: z.enum(PURPOSE_VALUES),
   strength: z.enum(STRENGTH_VALUES),
-  successorId: z.string().optional(),
+  predecessorId: z.string().optional(),
 });
 
 export const TestLoginFormSchema = z.object({
@@ -82,7 +82,9 @@ export const ListDocumentSchema = z.object({
 });
 
 export const DetectSingleSchema = z.object({
-  content: z.string(),
+  content: z.string().min(50, {
+    message: "Please enter at least 50 characters",
+  }),
 });
 
 export const SettingsSchema = z

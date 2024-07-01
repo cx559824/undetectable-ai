@@ -61,21 +61,21 @@ enum Status {
 }
 
 model HumanizedText {
-  id          String         @id @unique
-  userId      String
-  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  input       String
-  output      String?
-  readability String
-  purpose     String
-  strength    Int
-  cost        Int
-  status      Status
-  created     BigInt
-  successorId String?        @unique
-  score       Int?
-  successor   HumanizedText? @relation("DocumentHistory", fields: [successorId], references: [id])
-  predecessor HumanizedText? @relation("DocumentHistory")
+  id            String         @id @unique
+  userId        String
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  input         String
+  output        String?
+  readability   String
+  purpose       String
+  strength      String
+  cost          Int
+  status        Status
+  created       BigInt
+  predecessorId String?        @unique
+  score         Json?
+  predecessor   HumanizedText? @relation("DocumentHistory", fields: [predecessorId], references: [id])
+  successor     HumanizedText? @relation("DocumentHistory")
 
   @@map("humanized_text")
 }

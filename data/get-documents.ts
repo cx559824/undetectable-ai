@@ -6,14 +6,19 @@ import { currentUser } from "@/lib/auth";
 export const getDocuments = async () => {
   const user = await currentUser();
   const id = user?.id;
-  console.log(id);
 
   try {
     const documents = await db.humanizedText.findMany({
       where: { userId: id },
+      include: {
+        predecessor: {
+          include: {
+            predecessor: true,
+          },
+        },
+      },
     });
 
-    console.log(documents);
     return documents;
   } catch {
     return null;
