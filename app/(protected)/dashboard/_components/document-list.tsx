@@ -18,6 +18,8 @@ import { useAction } from "next-safe-action/hooks";
 import { humanizeTextForm } from "@/actions/humanize-text";
 import { CircleCheck, Loader2, ThumbsUp, TriangleAlert } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { getDocument } from "@/actions/get-document";
+import { useEffect, useRef } from "react";
 
 interface Score {
   human: number;
@@ -54,6 +56,35 @@ export default function DocumentList({
   documents: HumanizedText[];
 }) {
   const { execute, isExecuting } = useAction(humanizeTextForm);
+  const { execute: execute2, isExecuting: isExecuting2 } =
+    useAction(getDocument);
+
+  const timeoutRefs = useRef<{ [key: string]: NodeJS.Timeout }>({});
+
+  useEffect(() => {
+    documents.forEach((document) => {
+      if (document.status === "queued") {
+        // Clear any existing timeout for this document
+        if (timeoutRefs.current[document.id]) {
+          clearTimeout(timeoutRefs.current[document.id]);
+        }
+
+        // Set a new timeout for this document
+        timeoutRefs.current[document.id] = setTimeout(() => {
+          execute2({ id: document.id });
+        }, 10000);
+      } else if (timeoutRefs.current[document.id]) {
+        // Clear the timeout if status is no longer "queued"
+        clearTimeout(timeoutRefs.current[document.id]);
+        delete timeoutRefs.current[document.id];
+      }
+    });
+
+    // Cleanup on unmount
+    return () => {
+      Object.values(timeoutRefs.current).forEach(clearTimeout);
+    };
+  }, [documents, execute2]);
 
   return (
     <Card className="mx-auto flex h-full w-full flex-col space-y-2 py-2">
@@ -61,6 +92,7 @@ export default function DocumentList({
         const score = isScore(document.score)
           ? (document.score as Score)
           : null;
+
         return (
           <Dialog key={document.id}>
             <DialogTrigger asChild>
@@ -76,7 +108,13 @@ export default function DocumentList({
                   score && score.human < 51 && "bg-red-500 text-white"
                 )}
               >
-                <p>{document.output}</p>
+                {document.output ? (
+                  <p>{document.output}</p>
+                ) : (
+                  <span className="flex w-full gap-3">
+                    <Loader2 className="animate-spin" /> Still processing...
+                  </span>
+                )}
               </div>
             </DialogTrigger>
             <DialogContent className="flex h-auto flex-col space-y-4 sm:max-w-[900px]">
@@ -84,10 +122,10 @@ export default function DocumentList({
               <DialogHeader className="m-0 flex h-auto w-full flex-row items-center justify-start space-x-20 px-0">
                 <div className="flex flex-col">
                   <strong>READABILITY:</strong>
-                  <p>{document.readability} </p>
+                  <p>{document.readability}</p>
                 </div>
                 <div className="flex flex-col">
-                  <strong>PURPOSE:</strong> <p>{document.purpose} </p>
+                  <strong>PURPOSE:</strong> <p>{document.purpose}</p>
                 </div>
                 <div className="flex flex-col">
                   <strong>STRENGTH:</strong> <p>{document.strength}</p>
@@ -151,7 +189,7 @@ export default function DocumentList({
               </div>
               <DialogFooter className="justify-end">
                 {isExecuting ? (
-                  <Loader2 className="w-6" />
+                  <Loader2 className="w-6 animate-spin" />
                 ) : (
                   <Button
                     onClick={async () => {

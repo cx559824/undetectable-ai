@@ -40,7 +40,7 @@ import { detectIndividual } from "@/actions/ud-detect-individual";
 import { cn } from "@/lib/utils";
 
 export default function ClientForm() {
-  const { execute, isExecuting } = useAction(humanizeTextForm);
+  const { execute, isExecuting, result } = useAction(humanizeTextForm);
 
   const {
     execute: execute2,
@@ -209,6 +209,7 @@ export default function ClientForm() {
                 onClick={form.handleSubmit(async (data) => {
                   execute(data);
                   toast.success("Text Humanized");
+                  console.log(result.data?.savedData);
                 })}
                 className="flex-end"
                 type="submit"
