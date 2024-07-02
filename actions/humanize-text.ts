@@ -6,7 +6,6 @@ import { currentUser } from "@/lib/auth";
 import { actionClient } from "@/lib/safe-action";
 import { HumanizeTextFormSchema } from "@/zod-schemas";
 import { revalidatePath } from "next/cache";
-import { Prisma } from "@prisma/client";
 
 export const humanizeTextForm = actionClient
   .schema(HumanizeTextFormSchema)
@@ -44,67 +43,28 @@ export const humanizeTextForm = actionClient
 
       if (!dbUser) return { error: "Unauthorized" };
 
-      if (result.status === "queued" && result.id) {
-        const id = result.id;
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        // Retry fetching the result recursively
-        const resendData = await fetch(`https://api.undetectable.ai/document`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "api-key": process.env.UNDETECTABLE_AI_API_KEY!,
+      try {
+        const savedData = await db.humanizedText.create({
+          data: {
+            userId: dbUser.id,
+            id: result.id,
+            input: content,
+            purpose: purpose,
+            strength: strength,
+            readability: readability,
+            cost: result.cost,
+            status: result.status,
+            created: result.created,
+            predecessorId: predecessorId,
           },
-          body: JSON.stringify({
-            id,
-          }),
         });
 
-        const data = await resendData.json();
-
-        const scoreData = await fetch(
-          `https://aicheck.undetectable.ai/detectIndividual`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              accept: "application/json",
-            },
-            body: JSON.stringify({
-              text: data.output,
-              key: process.env.UNDETECTABLE_AI_API_KEY!,
-            }),
-          }
-        );
-
-        const score = await scoreData.json();
-
-        console.log(score);
-
-        try {
-          const savedData = await db.humanizedText.create({
-            data: {
-              userId: dbUser.id,
-              id: data.id,
-              input: content,
-              score: score,
-              purpose: purpose,
-              output: data.output,
-              strength: strength,
-              readability: readability,
-              cost: data.cost,
-              status: data.status,
-              created: data.created,
-              predecessorId: predecessorId,
-            },
-          });
-
-          console.log(savedData);
-
-          revalidatePath("/dashboard");
-          return { savedData };
-        } catch (error) {
-          console.log(error);
-        }
+        console.log(savedData);
+        revalidatePath("/dashboard");
+        return { savedData };
+      } catch (error) {
+        console.log(error);
+        // }
       }
     }
   );

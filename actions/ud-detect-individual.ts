@@ -24,7 +24,5 @@ export const detectIndividual = actionClient
 
     const detectIndividual = await response.json();
 
-    console.log(detectIndividual);
-
     return { detectIndividual };
   });
