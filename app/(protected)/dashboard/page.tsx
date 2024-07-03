@@ -1,6 +1,8 @@
 import { getDocuments } from "@/data/get-documents";
 import ClientForm from "./_components/client-form";
 import DocumentList from "./_components/document-list";
+import { Suspense } from "react";
+import { Loader2 } from "lucide-react";
 
 export default async function Dashboard() {
   const documents = await getDocuments();
@@ -11,7 +13,10 @@ export default async function Dashboard() {
         <div>
           <ClientForm />
         </div>
-        {documents ? <DocumentList documents={documents} /> : "Loading..."}
+        <Suspense fallback={<Loader2 className="animate-spin items-center" />}>
+          {/* @ts-ignore */}
+          {documents ? <DocumentList documents={documents} /> : "Loading..."}
+        </Suspense>
       </div>
     </>
   );
