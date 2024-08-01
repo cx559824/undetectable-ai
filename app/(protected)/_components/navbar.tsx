@@ -4,9 +4,9 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
-import { logout } from "@/actions/logout"; // Serverside logout
+// import { logout } from "@/actions/logout"; // Serverside logout
 // import { signOut } from "next-auth/react"; // Clientside signOut
-import { useCurrentUser } from "@/hooks/use-current-user";
+// import { useCurrentUser } from "@/hooks/use-current-user";
 import { ModeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
 import { UserButton } from "@/components/auth/user-button";

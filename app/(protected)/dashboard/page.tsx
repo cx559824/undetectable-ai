@@ -14,7 +14,6 @@ export default async function Dashboard() {
           <ClientForm />
         </div>
         <Suspense fallback={<Loader2 className="animate-spin items-center" />}>
-          {/* @ts-ignore */}
           {documents ? <DocumentList documents={documents} /> : "Loading..."}
         </Suspense>
       </div>

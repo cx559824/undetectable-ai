@@ -1,5 +1,4 @@
 import { UserRole } from "@prisma/client";
-import { User } from "lucide-react";
 import * as z from "zod";
 
 export const NewPasswordSchema = z.object({
